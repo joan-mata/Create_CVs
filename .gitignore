@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+backend/__pycache__/
+*.pyc
+.ipynb_checkpoints/
+frontend/dist/
+frontend/build/
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Storage & Sensitive Data
+storage/*.yaml
+!storage/example.yaml
+cv_joan_en.yaml
+cv_joan_esp.yaml
+
+# Logs
+*.log
+backend_debug.log
+
+# Temporary files
+test_*.pdf
+repro_*.pdf
+test_*.py
+debug_*.py
+.gemini/
+.agents/
