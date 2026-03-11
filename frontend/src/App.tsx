@@ -148,7 +148,7 @@ function App() {
           >EN</button>
         </div>
         {showVersions && (
-          <div className="versions-list">
+          <div className="cv-versions-list">
             {cvVersions.map(cv => (
               <button key={cv} className="btn-version" onClick={() => handleLoad(cv)}>
                 {cv.replace('.yaml', '')}
