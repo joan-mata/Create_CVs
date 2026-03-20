@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cv-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cvuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cvpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-cvdb}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: cv-backend
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5-coder:1.5b}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cvuser}:${POSTGRES_PASSWORD:-cvpassword}@db:5432/${POSTGRES_DB:-cvdb}
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: cv-frontend
+    ports:
+      - "${PORT:-8082}:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  postgres_data:

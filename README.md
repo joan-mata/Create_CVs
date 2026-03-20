@@ -9,11 +9,18 @@ Este proyecto es un editor de CVs inteligente que utiliza IA para extraer datos 
 
 ## Cómo Ejecutar la Aplicación
 
-Para lanzar ambos servicios simultáneamente, puedes usar el script de inicio:
+### 🐳 Opción recomendada: Docker (Servidor Local)
+Si tienes Docker instalado, puedes levantar todo el sistema (Frontend, Backend y Base de Datos) con un solo comando:
 
 ```bash
-./start.sh
+./setup-local.sh
 ```
+*La aplicación estará disponible en `http://localhost:8082`*
+
+---
+
+### 💻 Opción: Ejecución Manual (Desarrollo)
+Para lanzar los servicios localmente sin Docker:
 
 ### Ejecución Manual
 
