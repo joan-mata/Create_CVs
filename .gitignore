@@ -18,6 +18,9 @@ storage/
 *.log
 backend_debug.log
 
+# Server environment (secrets — never commit)
+.env.server
+
 # Temporary files
 test_*.pdf
 repro_*.pdf
