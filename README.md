@@ -21,6 +21,10 @@ Si prefieres lanzarlos por separado:
 
 **1. Backend (Python):**
 ```bash
+# Instalar dependencias
+pip install -r backend/requirements.txt
+
+# Ejecutar servidor
 python3 backend/main.py
 ```
 *El servidor correrá en `http://localhost:8000`*

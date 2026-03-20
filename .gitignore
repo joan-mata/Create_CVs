@@ -11,11 +11,8 @@ frontend/build/
 .vscode/
 .idea/
 
-# Storage & Sensitive Data
-storage/*.yaml
-!storage/example.yaml
-cv_joan_en.yaml
-cv_joan_esp.yaml
+# Storage
+storage/
 
 # Logs
 *.log
