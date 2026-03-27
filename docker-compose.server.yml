@@ -49,6 +49,8 @@ services:
     depends_on:
       cv-db:
         condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: always
 
   # ── FRONTEND ──────────────────────────────────────────────────────────────

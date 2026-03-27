@@ -5,6 +5,7 @@ backend/__pycache__/
 .ipynb_checkpoints/
 frontend/dist/
 frontend/build/
+bin/
 
 # IDE / OS
 .DS_Store
