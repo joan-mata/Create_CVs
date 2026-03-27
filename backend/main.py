@@ -265,7 +265,7 @@ Responde SOLO con el YAML, sin texto adicional antes o después:"""
         response = ollama.generate(prompt, temperature=0.3)
         
         yaml_str = response.strip()
-        yaml_str = yaml_str.replace('"', '"').replace('"', '"').replace(''', "'").replace(''', "'")
+        yaml_str = yaml_str.replace('“', '"').replace('”', '"').replace('‘', "'").replace('’', "'")
         if yaml_str.startswith("```yaml"):
             yaml_str = yaml_str[7:]
         if yaml_str.endswith("```"):
@@ -279,7 +279,70 @@ Responde SOLO con el YAML, sin texto adicional antes o después:"""
         raise HTTPException(status_code=500, detail=f"Error con IA: {str(e)}")
 
 
-@app.post("/api/save-cv")
+@app.post("/api/ai/tailor")
+async def ai_tailor(request: dict):
+    try:
+        yaml_content = request.get("yaml", "")
+        job_description = request.get("job_description", "")
+        
+        if not ollama.is_connected():
+            raise HTTPException(status_code=503, detail="Ollama no está conectado")
+        
+        tailored_yaml = ollama.tailor_cv(yaml_content, job_description)
+        return {"yaml": tailored_yaml}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error con IA: {str(e)}")
+
+
+@app.post("/api/ai/ats-scan")
+async def ai_ats_scan(request: dict):
+    try:
+        yaml_content = request.get("yaml", "")
+        
+        if not ollama.is_connected():
+            raise HTTPException(status_code=503, detail="Ollama no está conectado")
+        
+        result = ollama.ats_scan(yaml_content)
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error con IA: {str(e)}")
+
+
+@app.post("/api/ai/optimize-achievement")
+async def ai_optimize_achievement(request: dict):
+    try:
+        text = request.get("text", "")
+        
+        if not ollama.is_connected():
+            raise HTTPException(status_code=503, detail="Ollama no está conectado")
+        
+        optimized = ollama.optimize_achievement(text)
+        return {"optimized": optimized}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error con IA: {str(e)}")
+
+
+@app.post("/api/ai/cover-letter")
+async def ai_cover_letter(request: dict):
+    try:
+        yaml_content = request.get("yaml", "")
+        job_description = request.get("job_description", "")
+        
+        if not ollama.is_connected():
+            raise HTTPException(status_code=503, detail="Ollama no está conectado")
+        
+        letter = ollama.generate_cover_letter(yaml_content, job_description)
+        return {"letter": letter}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error con IA: {str(e)}")
 async def save_cv(request: dict):
     try:
         name = request.get("name", "cv_default")

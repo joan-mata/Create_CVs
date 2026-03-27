@@ -100,6 +100,81 @@ Responde en este formato:
             
         return suggestions, additional_yaml
     
+    def tailor_cv(self, cv_yaml: str, job_description: str) -> str:
+        system_prompt = "Eres un experto en adaptar CVs para ofertas de trabajo específicas."
+        prompt = f"""Adapta el siguiente CV en formato YAML a la descripción de puesto proporcionada.
+Resalta las habilidades y experiencias relevantes. Ajusta el tono y el lenguaje para que coincidan con la oferta.
+Mantén la estructura YAML original pero optimiza el contenido.
+
+IMPORTANTE: Responde ÚNICAMENTE con el código YAML resultante.
+
+CV Original:
+{cv_yaml}
+
+Descripción del puesto:
+{job_description}
+
+YAML adaptable:"""
+        response = self.generate(prompt, system_prompt=system_prompt, temperature=0.3)
+        
+        # Clean up
+        tailored_yaml = response.strip()
+        if "```yaml" in tailored_yaml:
+            tailored_yaml = tailored_yaml.split("```yaml")[1].split("```")[0].strip()
+        elif "```" in tailored_yaml:
+            tailored_yaml = tailored_yaml.split("```")[1].split("```")[0].strip()
+            
+        return tailored_yaml
+
+    def ats_scan(self, cv_yaml: str) -> dict:
+        system_prompt = "Eres un sistema experto en auditoría de CVs para compatibilidad con ATS."
+        prompt = f"""Analiza el siguiente CV en formato YAML y evalúa su compatibilidad con sistemas ATS.
+Proporciona una puntuación del 0 al 100 y una lista de consejos específicos para mejorar.
+
+Responde ÚNICAMENTE en formato JSON:
+{{
+  "score": 85,
+  "tips": ["Consejo 1", "Consejo 2"]
+}}
+
+CV at analizar:
+{cv_yaml}
+"""
+        response = self.generate(prompt, system_prompt=system_prompt, temperature=0.2)
+        
+        try:
+            start = response.find('{')
+            end = response.rfind('}') + 1
+            if start != -1 and end != 0:
+                return json.loads(response[start:end])
+            return {"score": 0, "tips": ["Error analizando el CV"]}
+        except:
+            return {"score": 0, "tips": ["Error de procesamiento"]}
+
+    def optimize_achievement(self, text: str) -> str:
+        prompt = f"""Convierte la siguiente descripción de una tarea en un logro profesional impactante y cuantificable.
+Usa verbos de acción fuertes y, si es posible, inventa métricas realistas (como porcentajes o cifras) que encajen en el contexto profesional.
+
+Texto original: {text}
+
+Logro optimizado (una sola frase impactante):"""
+        response = self.generate(prompt, temperature=0.8)
+        return response.strip().replace('"', '')
+
+    def generate_cover_letter(self, cv_yaml: str, job_description: str) -> str:
+        system_prompt = "Eres un experto en redacción de cartas de presentación persuasivas."
+        prompt = f"""Redacta una carta de presentación profesional y personalizada basada en el CV y la descripción del puesto.
+La carta debe ser breve (máximo 300 palabras), destacar los puntos clave de la experiencia y mostrar entusiasmo por la empresa.
+
+CV:
+{cv_yaml}
+
+Oferta:
+{job_description}
+
+Carta de Presentación:"""
+        return self.generate(prompt, system_prompt=system_prompt, temperature=0.7)
+
     def generate_versions(self, cv_yaml: str) -> list[dict]:
         prompt = f"""Genera 3 versiones estratégicas de este CV en formato YAML basándote en el original.
 1. "Professional": Conservador, serio, ideal para grandes empresas.

@@ -179,28 +179,86 @@ export function useCV() {
     }
   }, [yaml]);
 
-  const formatWithAI = useCallback(async (rawText: string) => {
+  const tailorCV = useCallback(async (jobDescription: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/ai/format', {
+      const response = await fetch('/api/ai/tailor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ raw_text: rawText }),
+        body: JSON.stringify({ yaml, job_description: jobDescription }),
       });
-      
-      if (!response.ok) {
-        throw new Error('Error formateando con IA');
-      }
-      
+      if (!response.ok) throw new Error('Error adaptando CV con IA');
       const data = await response.json();
       setYaml(data.yaml);
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, [yaml]);
+
+  const getAtsScan = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/ai/ats-scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ yaml }),
+      });
+      if (!response.ok) throw new Error('Error escaneando ATS');
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [yaml]);
+
+  const optimizeAchievement = useCallback(async (text: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/ai/optimize-achievement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      if (!response.ok) throw new Error('Error optimizando logro');
+      const data = await response.json();
+      return data.optimized;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      return null;
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const generateCoverLetter = useCallback(async (jobDescription: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/ai/cover-letter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ yaml, job_description: jobDescription }),
+      });
+      if (!response.ok) throw new Error('Error generando carta');
+      const data = await response.json();
+      return data.letter;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [yaml]);
 
   const exportPdf = useCallback(async () => {
     if (!pdfBase64) {
@@ -278,9 +336,12 @@ export function useCV() {
     getCapabilitySuggestions,
     generateVersions,
     exportPdf,
-    formatWithAI,
     saveCv,
     fetchCvs,
     loadCv,
+    tailorCV,
+    getAtsScan,
+    optimizeAchievement,
+    generateCoverLetter,
   };
 }

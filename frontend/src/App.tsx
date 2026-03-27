@@ -27,6 +27,10 @@ function App() {
     saveCv,
     fetchCvs,
     loadCv,
+    tailorCV,
+    getAtsScan,
+    generateCoverLetter,
+    optimizeAchievement,
   } = useCV();
 
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
@@ -97,24 +101,11 @@ function App() {
     }
   }, [error, addToast]);
 
-  useEffect(() => {
-    generatePreview(lang);
-  }, [lang]);
-
   const handleApplyYaml = (newYaml: string) => {
     setYaml(newYaml);
     setAiPanelOpen(false);
     addToast('success', 'CV actualizado');
     setTimeout(() => generatePreview(lang), 100);
-  };
-
-  const handleFormatWithAI = async () => {
-    const rawText = prompt('Pega el texto de tu CV para formatear:');
-    if (rawText && rawText.trim()) {
-      await formatWithAI(rawText);
-      addToast('success', 'CV formateado');
-      setTimeout(() => generatePreview(lang), 500);
-    }
   };
 
   return (
@@ -127,7 +118,6 @@ function App() {
         onGeneratePreview={() => generatePreview(lang)}
         onExportPdf={exportPdf}
         onToggleAiPanel={() => setAiPanelOpen(!aiPanelOpen)}
-        onFormatWithAI={() => handleFormatWithAI()}
         loading={loading}
       />
 
@@ -169,6 +159,10 @@ function App() {
         onGetRecommendations={getAiRecommendations}
         onGetCapabilities={getCapabilitySuggestions}
         onGenerateVersions={generateVersions}
+        onTailor={tailorCV}
+        onAtsScan={getAtsScan}
+        onCoverLetter={generateCoverLetter}
+        onOptimizeAchievement={optimizeAchievement}
         onApplyYaml={handleApplyYaml}
         loading={loading}
       />
