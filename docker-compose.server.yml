@@ -56,8 +56,8 @@ services:
     build: ./frontend
     container_name: cv-frontend
     networks:
-      - proxy-net       # Visible para cv-proxy → puede recibir tráfico de internet
-      - cv-net          # Puede hacer proxy de /api hacia cv-backend
+      - proxy-net       # Visible para cv-proxy
+      - cv-net          # Para hablar con cv-backend
     depends_on:
       - cv-backend
     restart: always
