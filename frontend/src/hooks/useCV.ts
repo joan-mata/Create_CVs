@@ -4,6 +4,7 @@ const DEFAULT_YAML = `nombre: "Tu Nombre"
 email: "email@ejemplo.com"
 telefono: ""
 ubicacion: ""
+website: ""
 
 perfil:
   texto: "Profesional con experiencia en..."

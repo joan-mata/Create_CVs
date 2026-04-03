@@ -134,7 +134,8 @@ class CVGenerator:
         contact_lines = [
             self._get_val(cv_data, 'email', 'email', ''),
             self._get_val(cv_data, 'telefono', 'phone', ''),
-            self._get_val(cv_data, 'ubicacion', 'location', '')
+            self._get_val(cv_data, 'ubicacion', 'location', ''),
+            self._get_val(cv_data, 'website', 'url', '')
         ]
         contact_str = "  |  ".join([line for line in contact_lines if line])
         pdf.cell(line_len, 6, safe_text(contact_str), ln=False, align='C')

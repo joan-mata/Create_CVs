@@ -30,7 +30,8 @@ class CVParser:
             "nombre": "",
             "email": "",
             "telefono": "",
-            "ubicacion": ""
+            "ubicacion": "",
+            "website": ""
         }
         
         email_match = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', text)
@@ -40,6 +41,11 @@ class CVParser:
         phone_match = re.search(r'\+?\d{1,3}[\s.-]?\d{3,4}[\s.-]?\d{3,4}', text)
         if phone_match:
             data["telefono"] = phone_match.group()
+            
+        # Basic website regex
+        website_match = re.search(r'(https?://)?(www\.)?[\w-]+\.[\w.-]{2,}(\/[\w./?%&=-]*)?', text)
+        if website_match:
+            data["website"] = website_match.group()
             
         # Try to find the name in the first few lines
         lines = [l.strip() for l in text.split('\n') if l.strip()]

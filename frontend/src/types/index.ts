@@ -3,6 +3,7 @@ export interface CVData {
   email: string;
   telefono: string;
   ubicacion: string;
+  website: string;
   foto?: string;
   perfil: {
     texto: string;
