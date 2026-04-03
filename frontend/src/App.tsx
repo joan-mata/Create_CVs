@@ -23,7 +23,6 @@ function App() {
     getCapabilitySuggestions,
     generateVersions,
     exportPdf,
-    formatWithAI,
     saveCv,
     fetchCvs,
     loadCv,
