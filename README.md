@@ -38,11 +38,17 @@ python3 backend/main.py
 
 **2. Frontend (React):**
 ```bash
+# Puedes instalar y compilar desde la raíz del proyecto
+npm install --prefix frontend
+npm run build
+```
+*O ejecutarlos dentro de `frontend/`:*
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-*La aplicación estará accesible en `http://localhost:5173`*
+*La aplicación estará accesible en `http://localhost:5173` o el puerto de build.*
 
 ## Requisitos
 

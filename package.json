@@ -1,0 +1,10 @@
+{
+  "name": "create-cvs-project",
+  "private": true,
+  "description": "AI CV Editor and Previewer",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "preview": "npm run preview --prefix frontend"
+  }
+}
