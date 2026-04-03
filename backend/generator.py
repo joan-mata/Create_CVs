@@ -105,27 +105,31 @@ class CVGenerator:
         start_y = pdf.get_y()
         
         # Define areas
-        info_width = 145
+        has_photo = bool(foto_base64 and len(foto_base64.strip()) > 100)
+        
         photo_size = 35
         margin_right = 10
         photo_x = 210 - margin_right - photo_size
         
-        # Center point for the line relative to the photo
-        center_y = start_y + (photo_size / 2)
+        if has_photo:
+            line_len = photo_x - 5 - 10
+            center_y = start_y + (photo_size / 2)
+        else:
+            line_len = 190
+            center_y = start_y + 11  # Centered in a standard header block
         
         # 1. Name (Above the line)
         pdf.set_font('helvetica', 'B', 24)
         pdf.set_text_color(30, 41, 59)
         nombre = safe_text(self._get_val(cv_data, 'nombre', 'name', 'Tu Nombre'))
-        # Center horizontally relative to line length (photo_x - 5 - 10)
-        line_len = photo_x - 5 - 10
+        
         pdf.set_xy(10, center_y - 12) 
         pdf.cell(line_len, 10, nombre, ln=False, align='C')
         
-        # 2. Blue Line (At center of photo)
+        # 2. Blue Line
         pdf.set_line_width(0.6)
         pdf.set_draw_color(37, 99, 235)
-        pdf.line(10, center_y, photo_x - 5, center_y)
+        pdf.line(10, center_y, 10 + line_len if has_photo else 10 + line_len, center_y)
         
         # 3. Contact Info (Below the line)
         pdf.set_xy(10, center_y + 2)
@@ -141,19 +145,23 @@ class CVGenerator:
         pdf.cell(line_len, 6, safe_text(contact_str), ln=False, align='C')
         
         # 4. Photo (Right side)
-        if foto_base64:
+        if has_photo:
             try:
-                if "base64," in foto_base64:
-                    foto_base64 = foto_base64.split("base64,")[1]
+                temp_foto = foto_base64
+                if "base64," in temp_foto:
+                    temp_foto = temp_foto.split("base64,")[1]
                 
-                img_data = base64.b64decode(foto_base64)
+                img_data = base64.b64decode(temp_foto)
                 img_file = io.BytesIO(img_data)
                 pdf.image(img_file, x=photo_x, y=start_y, w=photo_size, h=photo_size)
             except Exception as e:
                 print(f"Error processing image: {e}")
         
         # Set Y for the next section
-        pdf.set_y(start_y + photo_size + 8)
+        if has_photo:
+            pdf.set_y(start_y + photo_size + 8)
+        else:
+            pdf.set_y(center_y + 15)
         
         # Sections
         perfil = self._get_val(cv_data, 'perfil', 'profile', {})
